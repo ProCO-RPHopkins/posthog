@@ -7,12 +7,13 @@ import React from 'react'
 import { IconChevronDown, IconChevronRight } from '@posthog/icons'
 
 import { Tooltip } from 'lib/lemon-ui/Tooltip'
-import { gradateColor, range } from 'lib/utils'
+import { IconChevronRight } from 'lib/lemon-ui/icons'
+import { gradateColor } from 'lib/utils'
 import { insightLogic } from 'scenes/insights/insightLogic'
 
 import { themeLogic } from '~/layout/navigation-3000/themeLogic'
 
-import { DEFAULT_RETENTION_TOTAL_INTERVALS, OVERALL_MEAN_KEY } from './retentionLogic'
+import { OVERALL_MEAN_KEY } from './retentionLogic'
 import { retentionModalLogic } from './retentionModalLogic'
 import { retentionTableLogic } from './retentionTableLogic'
 import { NO_BREAKDOWN_VALUE } from './types'
@@ -24,10 +25,10 @@ export function RetentionTable({ inSharedMode = false }: { inSharedMode?: boolea
         hideSizeColumn,
         retentionVizOptions,
         theme,
-        retentionFilter,
         expandedBreakdowns,
         retentionMeans,
         breakdownDisplayNames,
+        tableHeaders,
     } = useValues(retentionTableLogic(insightProps))
     const { toggleBreakdown } = useActions(retentionTableLogic(insightProps))
     const { openModal } = useActions(retentionModalLogic(insightProps))
@@ -35,7 +36,6 @@ export function RetentionTable({ inSharedMode = false }: { inSharedMode?: boolea
     const backgroundColorMean = theme?.['preset-2'] || '#000000' // Default to black if no color found
     const { isDarkModeOn } = useValues(themeLogic)
 
-    const totalIntervals = retentionFilter?.totalIntervals ?? DEFAULT_RETENTION_TOTAL_INTERVALS
     // only one breakdown value so don't need to highlight using different colors/autoexpand it
     const isSingleBreakdown = Object.keys(tableRowsSplitByBreakdownValue).length === 1
 
@@ -54,8 +54,8 @@ export function RetentionTable({ inSharedMode = false }: { inSharedMode?: boolea
                 <tr>
                     <th className="bg whitespace-nowrap">Cohort</th>
                     {!hideSizeColumn && <th className="bg">Size</th>}
-                    {range(0, totalIntervals).map((interval) => (
-                        <th key={interval}>{`${retentionFilter?.period} ${interval}`}</th>
+                    {tableHeaders.map((header) => (
+                        <th key={header}>{header}</th>
                     ))}
                 </tr>
 
@@ -101,7 +101,7 @@ export function RetentionTable({ inSharedMode = false }: { inSharedMode?: boolea
                                     </td>
                                 )}
 
-                                {range(0, totalIntervals).map((interval) => (
+                                {tableHeaders.map((_, interval) => (
                                     <td key={interval}>
                                         <CohortDay
                                             percentage={meanData?.meanPercentages?.[interval] ?? 0}
