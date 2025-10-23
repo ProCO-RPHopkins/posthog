@@ -90,6 +90,7 @@ import { OrganizationLogo } from './organization/OrgLogo'
 import { OrganizationDangerZone } from './organization/OrganizationDangerZone'
 import { OrganizationSecuritySettings } from './organization/OrganizationSecuritySettings'
 import { VerifiedDomains } from './organization/VerifiedDomains/VerifiedDomains'
+import { ProjectAPIKeys } from './project/ProjectAPIKeys'
 import { ProjectDangerZone } from './project/ProjectDangerZone'
 import { ProjectMove } from './project/ProjectMove'
 import { ProjectDisplayName } from './project/ProjectSettings'
@@ -135,6 +136,12 @@ export const SETTINGS_MAP: SettingSection[] = [
                 id: 'variables',
                 title: 'Project ID',
                 component: <TeamVariables />,
+            },
+            {
+                id: 'environment-secret-api-keys',
+                title: 'Project secret API keys',
+                component: <ProjectAPIKeys />,
+                flag: 'PROJECT_SECRET_API_KEYS',
             },
         ],
     },
