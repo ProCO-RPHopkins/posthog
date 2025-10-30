@@ -4115,7 +4115,6 @@ class ExperimentStatsBase(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    breakdown_value: Optional[str] = None
     denominator_sum: Optional[float] = None
     denominator_sum_squares: Optional[float] = None
     key: str
@@ -4131,7 +4130,6 @@ class ExperimentStatsBaseValidated(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    breakdown_value: Optional[str] = None
     denominator_sum: Optional[float] = None
     denominator_sum_squares: Optional[float] = None
     key: str
@@ -4148,7 +4146,6 @@ class ExperimentVariantResultBayesian(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    breakdown_value: Optional[str] = None
     chance_to_win: Optional[float] = None
     credible_interval: Optional[list[float]] = Field(default=None, max_length=2, min_length=2)
     denominator_sum: Optional[float] = None
@@ -4169,7 +4166,6 @@ class ExperimentVariantResultFrequentist(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    breakdown_value: Optional[str] = None
     confidence_interval: Optional[list[float]] = Field(default=None, max_length=2, min_length=2)
     denominator_sum: Optional[float] = None
     denominator_sum_squares: Optional[float] = None
