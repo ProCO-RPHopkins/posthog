@@ -9106,7 +9106,12 @@ class ExperimentBreakdownResult(BaseModel):
         extra="forbid",
     )
     baseline: ExperimentStatsBaseValidated = Field(..., description="Control variant stats for this breakdown")
-    breakdown_value: str = Field(..., description='The breakdown value (e.g., "Chrome", "Safari")')
+    breakdown_value: list[str] = Field(
+        ...,
+        description=(
+            'The breakdown values as an array (e.g., ["MacOS", "Chrome"] for multi-breakdown, ["Chrome"] for single)'
+        ),
+    )
     variants: Union[list[ExperimentVariantResultFrequentist], list[ExperimentVariantResultBayesian]] = Field(
         ..., description="Test variant results with statistical comparisons for this breakdown"
     )
@@ -9785,7 +9790,7 @@ class NewExperimentQueryResponse(BaseModel):
     )
     baseline: ExperimentStatsBaseValidated
     breakdown_results: Optional[list[ExperimentBreakdownResult]] = None
-    breakdown_values: Optional[list[str]] = None
+    breakdown_values: Optional[list[list[str]]] = None
     variant_results: Union[list[ExperimentVariantResultFrequentist], list[ExperimentVariantResultBayesian]]
 
 
@@ -12400,7 +12405,7 @@ class CachedNewExperimentQueryResponse(BaseModel):
     )
     baseline: ExperimentStatsBaseValidated
     breakdown_results: Optional[list[ExperimentBreakdownResult]] = None
-    breakdown_values: Optional[list[str]] = None
+    breakdown_values: Optional[list[list[str]]] = None
     cache_key: str
     cache_target_age: Optional[datetime] = None
     calculation_trigger: Optional[str] = Field(
@@ -13772,8 +13777,12 @@ class ExperimentQueryResponse(BaseModel):
             "Results grouped by breakdown value. When present, baseline and variant_results contain aggregated data."
         ),
     )
-    breakdown_values: Optional[list[str]] = Field(
-        default=None, description='List of all breakdown values found in the results (e.g., ["Chrome", "Safari"])'
+    breakdown_values: Optional[list[list[str]]] = Field(
+        default=None,
+        description=(
+            'List of all breakdown combinations found in the results (e.g., [["MacOS", "Chrome"], ["Windows",'
+            ' "Safari"]])'
+        ),
     )
     credible_intervals: Optional[dict[str, list[float]]] = None
     insight: Optional[list[dict[str, Any]]] = None
@@ -14284,8 +14293,12 @@ class QueryResponseAlternative19(BaseModel):
             "Results grouped by breakdown value. When present, baseline and variant_results contain aggregated data."
         ),
     )
-    breakdown_values: Optional[list[str]] = Field(
-        default=None, description='List of all breakdown values found in the results (e.g., ["Chrome", "Safari"])'
+    breakdown_values: Optional[list[list[str]]] = Field(
+        default=None,
+        description=(
+            'List of all breakdown combinations found in the results (e.g., [["MacOS", "Chrome"], ["Windows",'
+            ' "Safari"]])'
+        ),
     )
     credible_intervals: Optional[dict[str, list[float]]] = None
     insight: Optional[list[dict[str, Any]]] = None
@@ -14462,8 +14475,12 @@ class CachedExperimentQueryResponse(BaseModel):
             "Results grouped by breakdown value. When present, baseline and variant_results contain aggregated data."
         ),
     )
-    breakdown_values: Optional[list[str]] = Field(
-        default=None, description='List of all breakdown values found in the results (e.g., ["Chrome", "Safari"])'
+    breakdown_values: Optional[list[list[str]]] = Field(
+        default=None,
+        description=(
+            'List of all breakdown combinations found in the results (e.g., [["MacOS", "Chrome"], ["Windows",'
+            ' "Safari"]])'
+        ),
     )
     cache_key: str
     cache_target_age: Optional[datetime] = None
