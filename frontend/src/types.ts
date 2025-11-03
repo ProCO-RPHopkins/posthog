@@ -312,6 +312,7 @@ export enum AccessControlResourceType {
     Survey = 'survey',
     Experiment = 'experiment',
     WebAnalytics = 'web_analytics',
+    ActivityLog = 'activity_log',
 }
 
 interface UserBaseType {
