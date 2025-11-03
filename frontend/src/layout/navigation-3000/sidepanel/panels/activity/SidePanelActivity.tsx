@@ -13,6 +13,7 @@ import { FEATURE_FLAGS } from 'lib/constants'
 import { useOnMountEffect } from 'lib/hooks/useOnMountEffect'
 import { IconWithCount } from 'lib/lemon-ui/icons'
 import { featureFlagLogic } from 'lib/logic/featureFlagLogic'
+import { userHasAccess } from 'lib/utils/accessControlUtils'
 import { urls } from 'scenes/urls'
 import { userLogic } from 'scenes/userLogic'
 
@@ -22,7 +23,7 @@ import {
 } from '~/layout/navigation-3000/sidepanel/panels/activity/sidePanelActivityLogic'
 import { sidePanelNotificationsLogic } from '~/layout/navigation-3000/sidepanel/panels/activity/sidePanelNotificationsLogic'
 import { sidePanelStateLogic } from '~/layout/navigation-3000/sidepanel/sidePanelStateLogic'
-import { AvailableFeature } from '~/types'
+import { AccessControlLevel, AccessControlResourceType, AvailableFeature } from '~/types'
 
 import { SidePanelPaneHeader } from '../../components/SidePanelPaneHeader'
 import { SidePanelActivityMetalytics } from './SidePanelActivityMetalytics'
@@ -54,6 +55,8 @@ export const SidePanelActivity = (): JSX.Element => {
     const { user } = useValues(userLogic)
     const { featureFlags } = useValues(featureFlagLogic)
 
+    const hasAccess = userHasAccess(AccessControlResourceType.ActivityLog, AccessControlLevel.Viewer)
+
     useOnMountEffect(() => {
         loadImportantChanges(false)
 
@@ -80,6 +83,24 @@ export const SidePanelActivity = (): JSX.Element => {
     const hasItemContext = Boolean(contextFromPage?.scope && contextFromPage?.item_id)
     const hasListContext = Boolean(contextFromPage?.scope && !contextFromPage?.item_id)
     const hasAnyContext = hasItemContext || hasListContext
+
+    if (!hasAccess) {
+        return (
+            <>
+                <SidePanelPaneHeader title="Team activity" />
+                <div className="flex flex-col items-center justify-center gap-3 p-6 text-center h-full">
+                    <IconNotification className="text-5xl text-muted" />
+                    <div>
+                        <div className="font-semibold mb-1">Access denied</div>
+                        <div className="text-xs text-muted-alt">
+                            You don't have sufficient permissions to view activity logs. Please contact your project
+                            administrator.
+                        </div>
+                    </div>
+                </div>
+            </>
+        )
+    }
 
     return (
         <>
