@@ -6,8 +6,11 @@ from posthog.schema import FeatureFlagGroupType, GroupPropertyFilter, PersonProp
 from posthog.models import FeatureFlag
 from posthog.models.group_type_mapping import GroupTypeMapping
 
-from products.feature_flags.backend.max_tools import CreateFeatureFlagTool, FeatureFlagCreationSchema
-
+from ee.hogai.graph.root.tools.create_feature_flag import (
+    CreateFeatureFlagTool,
+    FeatureFlagCreationSchema,
+    MultivariateVariant,
+)
 from ee.hogai.utils.types import AssistantState
 
 
@@ -274,7 +277,6 @@ class TestCreateFeatureFlagTool(APIBaseTest):
 
     async def test_create_multivariate_flag(self):
         """Test creating a multivariate A/B test flag."""
-        from products.feature_flags.backend.max_tools import MultivariateVariant
 
         tool = self._create_tool()
 
@@ -304,7 +306,6 @@ class TestCreateFeatureFlagTool(APIBaseTest):
 
     async def test_create_multivariate_flag_three_variants(self):
         """Test creating a multivariate flag with 3 variants."""
-        from products.feature_flags.backend.max_tools import MultivariateVariant
 
         tool = self._create_tool()
 
@@ -329,7 +330,6 @@ class TestCreateFeatureFlagTool(APIBaseTest):
 
     async def test_create_multivariate_flag_invalid_percentages(self):
         """Test error when variant percentages don't sum to 100."""
-        from products.feature_flags.backend.max_tools import MultivariateVariant
 
         tool = self._create_tool()
 
@@ -354,7 +354,6 @@ class TestCreateFeatureFlagTool(APIBaseTest):
 
     async def test_create_multivariate_with_property_filters(self):
         """Test creating a multivariate flag with property filters (targeted A/B test)."""
-        from products.feature_flags.backend.max_tools import MultivariateVariant
 
         # Setup: Create a group type mapping
         await GroupTypeMapping.objects.acreate(

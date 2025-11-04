@@ -10,7 +10,6 @@ from posthog.models import FeatureFlag, GroupTypeMapping, Tag, TaggedItem, Team,
 from posthog.models.property_definition import PropertyDefinition
 from posthog.sync import database_sync_to_async
 
-from ee.hogai.graph.taxonomy.agent import TaxonomyAgent
 from ee.hogai.graph.taxonomy.nodes import TaxonomyAgentNode, TaxonomyAgentToolsNode
 from ee.hogai.graph.taxonomy.toolkit import TaxonomyAgentToolkit
 from ee.hogai.graph.taxonomy.tools import TaxonomyTool, ask_user_for_help, base_final_answer
@@ -532,28 +531,6 @@ class FeatureFlagCreationToolsNode(
         super().__init__(team, user, toolkit_class=toolkit_class)
 
 
-class FeatureFlagGeneratorGraph(TaxonomyAgent[TaxonomyAgentState, TaxonomyAgentState[FeatureFlagCreationSchema]]):
-    """
-    Graph for AI-powered feature flag generation with property-based targeting.
-
-    This graph uses a TaxonomyAgent to:
-    1. Understand natural language instructions
-    2. Discover available properties via read_taxonomy
-    3. Validate property filters
-    4. Generate structured feature flag configuration
-    """
-
-    def __init__(self, team: Team, user: User, tool_call_id: str):
-        super().__init__(
-            team,
-            user,
-            tool_call_id,
-            loop_node_class=FeatureFlagCreationNode,
-            tools_node_class=FeatureFlagCreationToolsNode,
-            toolkit_class=FeatureFlagToolkit,
-        )
-
-
 class CreateFeatureFlagArgs(BaseModel):
     instructions: str = Field(
         description="Natural language description of the feature flag to create, "
@@ -601,17 +578,40 @@ The tool will automatically:
 
 **Group-based:**
 - "Create a flag targeting organizations"
-- "Create a flag for companies where employee count > 100
-
-**For experiments**: If creating a flag for an A/B test or experiment, after creating
-the flag, you should navigate to the experiments page and use create_experiment with
-this flag's key to complete the experiment setup."
+- "Create a flag for companies where employee count > 100"
     """.strip()
     context_prompt_template: str = "Creates a new feature flag in the project with optional property-based targeting and multivariate variants for A/B testing"
     args_schema: type[BaseModel] = CreateFeatureFlagArgs
 
     async def _create_flag_from_instructions(self, instructions: str) -> FeatureFlagCreationSchema:
         """Use TaxonomyAgent graph to generate structured flag configuration."""
+        # Import here to avoid circular dependency at module load time
+        from ee.hogai.graph.taxonomy.agent import TaxonomyAgent
+
+        # Define the graph class locally to defer TaxonomyAgent import
+        class FeatureFlagGeneratorGraph(
+            TaxonomyAgent[TaxonomyAgentState, TaxonomyAgentState[FeatureFlagCreationSchema]]
+        ):
+            """
+            Graph for AI-powered feature flag generation with property-based targeting.
+
+            This graph uses a TaxonomyAgent to:
+            1. Understand natural language instructions
+            2. Discover available properties via read_taxonomy
+            3. Validate property filters
+            4. Generate structured feature flag configuration
+            """
+
+            def __init__(self, team: Team, user: User, tool_call_id: str):
+                super().__init__(
+                    team,
+                    user,
+                    tool_call_id,
+                    loop_node_class=FeatureFlagCreationNode,
+                    tools_node_class=FeatureFlagCreationToolsNode,
+                    toolkit_class=FeatureFlagToolkit,
+                )
+
         graph = FeatureFlagGeneratorGraph(team=self._team, user=self._user, tool_call_id=self._tool_call_id)
 
         graph_context = {

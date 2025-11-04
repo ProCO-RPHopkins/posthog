@@ -14,15 +14,13 @@ from posthog.schema import (
 from posthog.models import Team, User
 
 from ee.hogai.assistant.base import BaseAssistant
-from ee.hogai.graph import (
-    AssistantGraph,
-    FunnelGeneratorNode,
-    RetentionGeneratorNode,
-    SQLGeneratorNode,
-    TrendsGeneratorNode,
-)
 from ee.hogai.graph.base import BaseAssistantNode
+from ee.hogai.graph.funnels.nodes import FunnelGeneratorNode
+from ee.hogai.graph.graph import AssistantGraph
 from ee.hogai.graph.insights.nodes import InsightSearchNode
+from ee.hogai.graph.retention.nodes import RetentionGeneratorNode
+from ee.hogai.graph.sql.nodes import SQLGeneratorNode
+from ee.hogai.graph.trends.nodes import TrendsGeneratorNode
 from ee.hogai.utils.state import GraphValueUpdateTuple, validate_value_update
 from ee.hogai.utils.types import (
     AssistantMode,

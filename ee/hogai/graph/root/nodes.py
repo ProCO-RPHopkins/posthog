@@ -30,6 +30,7 @@ from posthog.models import Team, User
 from ee.hogai.graph.base import AssistantNode
 from ee.hogai.graph.conversation_summarizer.nodes import AnthropicConversationSummarizer
 from ee.hogai.graph.root.compaction_manager import AnthropicConversationCompactionManager
+from ee.hogai.graph.root.tools.create_experiment import CreateExperimentTool
 from ee.hogai.graph.shared_prompts import CORE_MEMORY_PROMPT
 from ee.hogai.llm import MaxChatAnthropic
 from ee.hogai.tool import ToolMessagesArtifact
@@ -229,6 +230,8 @@ class RootNode(AssistantNode):
         return base_model.bind_tools(tools, parallel_tool_calls=False)
 
     async def _get_tools(self, state: AssistantState, config: RunnableConfig) -> list[RootTool]:
+        from ee.hogai.graph.root.tools.create_feature_flag import CreateFeatureFlagTool
+        from ee.hogai.graph.root.tools.create_survey import CreateSurveyTool
         from ee.hogai.tool import get_contextual_tool_class
 
         available_tools: list[RootTool] = []
@@ -250,6 +253,9 @@ class RootNode(AssistantNode):
                 ReadDataTool,
                 SearchTool,
                 TodoWriteTool,
+                CreateSurveyTool,
+                CreateFeatureFlagTool,
+                CreateExperimentTool,
             )
         )
         available_tools.extend(await asyncio.gather(*dynamic_tools))

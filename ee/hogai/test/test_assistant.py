@@ -79,7 +79,7 @@ from ee.hogai.utils.types import (
 from ee.models.assistant import Conversation, CoreMemory
 
 from ..assistant import Assistant
-from ..graph import AssistantGraph, InsightsAssistantGraph
+from ..graph.graph import AssistantGraph, InsightsAssistantGraph
 
 title_generator_mock = patch(
     "ee.hogai.graph.title_generator.nodes.TitleGeneratorNode._model",

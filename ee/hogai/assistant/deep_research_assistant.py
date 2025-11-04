@@ -7,8 +7,8 @@ from posthog.schema import AssistantMessage, HumanMessage, MaxBillingContext, Vi
 from posthog.models import Team, User
 
 from ee.hogai.assistant.base import BaseAssistant
-from ee.hogai.graph import DeepResearchAssistantGraph
 from ee.hogai.graph.base import BaseAssistantNode
+from ee.hogai.graph.deep_research.graph import DeepResearchAssistantGraph
 from ee.hogai.graph.deep_research.types import DeepResearchNodeName, DeepResearchState, PartialDeepResearchState
 from ee.hogai.utils.types import AssistantMode, AssistantOutput
 from ee.hogai.utils.types.composed import MaxNodeName
