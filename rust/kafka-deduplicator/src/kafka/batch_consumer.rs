@@ -17,8 +17,12 @@ use rdkafka::error::KafkaResult;
 use rdkafka::message::Message;
 use rdkafka::TopicPartitionList;
 use serde::Deserialize;
-use tokio::sync::{mpsc::UnboundedSender, oneshot::Receiver};
+use tokio::sync::oneshot::Receiver;
 use tracing::{error, info, warn};
+
+pub trait BatchConsumerProcessor<T>: Send + Sync {
+    fn process_batch(&self, messages: Vec<KafkaMessage<T>>) -> Result<()>;
+}
 
 pub struct BatchConsumer<T> {
     consumer: StreamConsumer<BatchConsumerContext>,
@@ -33,7 +37,7 @@ pub struct BatchConsumer<T> {
     batch_timeout: Duration,
 
     // where we send batches after consuming them
-    sender: UnboundedSender<Batch<T>>,
+    processor: Arc<dyn BatchConsumerProcessor<T>>,
 
     // shutdown signal from parent process which
     // we assume will be wrapping start_consumption
@@ -49,7 +53,7 @@ where
     pub fn new(
         config: &ClientConfig,
         rebalance_handler: Arc<dyn RebalanceHandler>,
-        sender: UnboundedSender<Batch<T>>,
+        processor: Arc<dyn BatchConsumerProcessor<T>>,
         shutdown_rx: Receiver<()>,
         topic: &str,
         batch_size: usize,
@@ -75,7 +79,7 @@ where
             commit_interval,
             batch_size,
             batch_timeout,
-            sender,
+            processor,
             shutdown_rx,
         })
     }
@@ -88,8 +92,6 @@ where
         let batch_size = self.batch_size;
         let mut commit_interval = tokio::time::interval(self.commit_interval);
 
-        // consume the clients and channels needed to operate the loop
-        let sender = self.sender;
         let consumer = self.consumer;
         let mut stream = consumer.stream();
 
@@ -116,9 +118,10 @@ where
                             metrics::counter!(BATCH_CONSUMER_MESSAGES_RECEIVED, "status" => "error")
                             .increment(batch.error_count() as u64);
 
-                            if let Err(e) = sender.send(batch) {
+                            let (messages, _errors) = batch.unpack();
+                            if let Err(e) = self.processor.process_batch(messages) {
                                 // TODO: stat this
-                                error!("Error sending Batch for processing: {e}");
+                                error!("Error processing batch: {e}");
                             }
                         }
 
@@ -143,8 +146,6 @@ where
         }
         info!("Batch consumer loop shutting down...");
 
-        // Drop the sender to signal no more messages
-        drop(sender);
         info!("Graceful shutdown completed");
 
         Ok(())
