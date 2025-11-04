@@ -16907,6 +16907,10 @@
                     "$ref": "#/definitions/IntegrationFilter",
                     "description": "Filter by integration IDs"
                 },
+                "interval": {
+                    "$ref": "#/definitions/IntervalType",
+                    "description": "For Product Analytics UI compatibility only - not used in Web Analytics query execution"
+                },
                 "kind": {
                     "const": "MarketingAnalyticsAggregatedQuery",
                     "type": "string"
@@ -17150,6 +17154,10 @@
                 "integrationFilter": {
                     "$ref": "#/definitions/IntegrationFilter",
                     "description": "Filter by integration type"
+                },
+                "interval": {
+                    "$ref": "#/definitions/IntervalType",
+                    "description": "For Product Analytics UI compatibility only - not used in Web Analytics query execution"
                 },
                 "kind": {
                     "const": "MarketingAnalyticsTableQuery",
@@ -27911,6 +27919,10 @@
                 "includeRevenue": {
                     "type": "boolean"
                 },
+                "interval": {
+                    "$ref": "#/definitions/IntervalType",
+                    "description": "For Product Analytics UI compatibility only - not used in Web Analytics query execution"
+                },
                 "kind": {
                     "const": "WebExternalClicksTableQuery",
                     "type": "string"
@@ -28037,6 +28049,10 @@
                 },
                 "includeRevenue": {
                     "type": "boolean"
+                },
+                "interval": {
+                    "$ref": "#/definitions/IntervalType",
+                    "description": "For Product Analytics UI compatibility only - not used in Web Analytics query execution"
                 },
                 "kind": {
                     "const": "WebGoalsQuery",
@@ -28190,6 +28206,10 @@
                 "includeRevenue": {
                     "type": "boolean"
                 },
+                "interval": {
+                    "$ref": "#/definitions/IntervalType",
+                    "description": "For Product Analytics UI compatibility only - not used in Web Analytics query execution"
+                },
                 "kind": {
                     "const": "WebOverviewQuery",
                     "type": "string"
@@ -28304,6 +28324,10 @@
                 },
                 "includeRevenue": {
                     "type": "boolean"
+                },
+                "interval": {
+                    "$ref": "#/definitions/IntervalType",
+                    "description": "For Product Analytics UI compatibility only - not used in Web Analytics query execution"
                 },
                 "kind": {
                     "const": "WebPageURLSearchQuery",
@@ -28460,6 +28484,10 @@
                 },
                 "includeScrollDepth": {
                     "type": "boolean"
+                },
+                "interval": {
+                    "$ref": "#/definitions/IntervalType",
+                    "description": "For Product Analytics UI compatibility only - not used in Web Analytics query execution"
                 },
                 "kind": {
                     "const": "WebStatsTableQuery",
@@ -28630,7 +28658,8 @@
                     "type": "boolean"
                 },
                 "interval": {
-                    "$ref": "#/definitions/IntervalType"
+                    "$ref": "#/definitions/IntervalType",
+                    "description": "For Product Analytics UI compatibility only - not used in Web Analytics query execution"
                 },
                 "kind": {
                     "const": "WebTrendsQuery",
@@ -28834,6 +28863,10 @@
                 "includeRevenue": {
                     "type": "boolean"
                 },
+                "interval": {
+                    "$ref": "#/definitions/IntervalType",
+                    "description": "For Product Analytics UI compatibility only - not used in Web Analytics query execution"
+                },
                 "kind": {
                     "const": "WebVitalsPathBreakdownQuery",
                     "type": "string"
@@ -28994,6 +29027,10 @@
                 },
                 "includeRevenue": {
                     "type": "boolean"
+                },
+                "interval": {
+                    "$ref": "#/definitions/IntervalType",
+                    "description": "For Product Analytics UI compatibility only - not used in Web Analytics query execution"
                 },
                 "kind": {
                     "const": "WebVitalsQuery",
