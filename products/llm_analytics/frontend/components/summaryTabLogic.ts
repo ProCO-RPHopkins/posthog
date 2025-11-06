@@ -1,4 +1,4 @@
-import { actions, kea, key, path, props, reducers } from 'kea'
+import { actions, kea, key, listeners, path, props, reducers } from 'kea'
 import { loaders } from 'kea-loaders'
 
 import { getCookie } from 'lib/api'
@@ -47,6 +47,7 @@ export const summaryTabLogic = kea<summaryTabLogicType>([
     }),
     actions({
         setSummaryMode: (mode: SummaryMode) => ({ mode }),
+        regenerateSummary: true,
     }),
     reducers({
         summaryMode: [
@@ -59,7 +60,7 @@ export const summaryTabLogic = kea<summaryTabLogicType>([
     loaders(({ props }) => ({
         summaryData: {
             __default: null as { summary: StructuredSummary; text_repr: string } | null,
-            generateSummary: async (mode: SummaryMode = 'minimal') => {
+            generateSummary: async ({ mode, forceRefresh = false }: { mode: SummaryMode; forceRefresh?: boolean }) => {
                 // Determine if we're summarizing a trace or an event
                 const isTrace = !!props.trace
 
@@ -68,6 +69,7 @@ export const summaryTabLogic = kea<summaryTabLogicType>([
                     ? {
                           summarize_type: 'trace',
                           mode,
+                          force_refresh: forceRefresh,
                           data: {
                               trace: props.trace,
                               hierarchy: props.tree || [],
@@ -76,6 +78,7 @@ export const summaryTabLogic = kea<summaryTabLogicType>([
                     : {
                           summarize_type: 'event',
                           mode,
+                          force_refresh: forceRefresh,
                           data: {
                               event: props.event,
                           },
@@ -109,6 +112,18 @@ export const summaryTabLogic = kea<summaryTabLogicType>([
                     text_repr: data.text_repr,
                 }
             },
+        },
+    })),
+    listeners(({ actions, values }) => ({
+        regenerateSummary: () => {
+            // Regenerate with current mode but force refresh to bust cache
+            actions.generateSummary({ mode: values.summaryMode, forceRefresh: true })
+        },
+        setSummaryMode: ({ mode }) => {
+            // Generate summary for new mode if we don't have data yet
+            if (values.summaryData) {
+                actions.generateSummary({ mode, forceRefresh: false })
+            }
         },
     })),
 ])

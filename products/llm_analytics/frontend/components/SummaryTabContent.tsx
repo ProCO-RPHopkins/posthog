@@ -25,7 +25,7 @@ export interface SummaryTabContentProps {
 export function SummaryTabContent({ trace, event, tree }: SummaryTabContentProps): JSX.Element {
     const logic = summaryTabLogic({ trace, event, tree })
     const { summaryData, summaryDataLoading, summaryMode } = useValues(logic)
-    const { generateSummary, setSummaryMode } = useActions(logic)
+    const { generateSummary, setSummaryMode, regenerateSummary } = useActions(logic)
     const { dataProcessingAccepted } = useValues(maxGlobalLogic)
 
     const isSummarizable = trace || (event && (event.event === '$ai_generation' || event.event === '$ai_span'))
@@ -92,12 +92,12 @@ export function SummaryTabContent({ trace, event, tree }: SummaryTabContentProps
                         {!dataProcessingAccepted ? (
                             <AIConsentPopoverWrapper
                                 showArrow
-                                onApprove={() => generateSummary(summaryMode)}
+                                onApprove={() => generateSummary({ mode: summaryMode })}
                                 hidden={summaryDataLoading}
                             >
                                 <LemonButton
                                     type="primary"
-                                    onClick={() => generateSummary(summaryMode)}
+                                    onClick={() => generateSummary({ mode: summaryMode })}
                                     data-attr="llm-analytics-generate-summary"
                                     loading={summaryDataLoading}
                                     disabledReason={summaryDataLoading ? 'Pending approval' : undefined}
@@ -108,7 +108,7 @@ export function SummaryTabContent({ trace, event, tree }: SummaryTabContentProps
                         ) : (
                             <LemonButton
                                 type="primary"
-                                onClick={() => generateSummary(summaryMode)}
+                                onClick={() => generateSummary({ mode: summaryMode })}
                                 data-attr="llm-analytics-generate-summary"
                                 loading={summaryDataLoading}
                             >
@@ -133,13 +133,13 @@ export function SummaryTabContent({ trace, event, tree }: SummaryTabContentProps
                     {!dataProcessingAccepted ? (
                         <AIConsentPopoverWrapper
                             showArrow
-                            onApprove={() => generateSummary(summaryMode)}
+                            onApprove={() => generateSummary({ mode: summaryMode })}
                             hidden={summaryDataLoading}
                         >
                             <LemonButton
                                 type="secondary"
                                 size="small"
-                                onClick={() => generateSummary(summaryMode)}
+                                onClick={() => generateSummary({ mode: summaryMode })}
                                 className="mt-4"
                                 loading={summaryDataLoading}
                                 disabledReason={summaryDataLoading ? 'Pending approval' : undefined}
@@ -151,7 +151,7 @@ export function SummaryTabContent({ trace, event, tree }: SummaryTabContentProps
                         <LemonButton
                             type="secondary"
                             size="small"
-                            onClick={() => generateSummary(summaryMode)}
+                            onClick={() => generateSummary({ mode: summaryMode })}
                             className="mt-4"
                             loading={summaryDataLoading}
                         >
@@ -167,13 +167,13 @@ export function SummaryTabContent({ trace, event, tree }: SummaryTabContentProps
                         {!dataProcessingAccepted ? (
                             <AIConsentPopoverWrapper
                                 showArrow
-                                onApprove={() => generateSummary(summaryMode)}
+                                onApprove={() => regenerateSummary()}
                                 hidden={summaryDataLoading}
                             >
                                 <LemonButton
                                     type="secondary"
                                     size="small"
-                                    onClick={() => generateSummary(summaryMode)}
+                                    onClick={() => regenerateSummary()}
                                     data-attr="llm-analytics-regenerate-summary"
                                     loading={summaryDataLoading}
                                     disabledReason={summaryDataLoading ? 'Pending approval' : undefined}
@@ -185,7 +185,7 @@ export function SummaryTabContent({ trace, event, tree }: SummaryTabContentProps
                             <LemonButton
                                 type="secondary"
                                 size="small"
-                                onClick={() => generateSummary(summaryMode)}
+                                onClick={() => regenerateSummary()}
                                 data-attr="llm-analytics-regenerate-summary"
                                 loading={summaryDataLoading}
                             >
