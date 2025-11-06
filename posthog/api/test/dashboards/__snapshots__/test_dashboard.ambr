@@ -3806,7 +3806,8 @@
                                                                                AND recent_dashboard_views."type" = 'dashboard'
                                                                                AND recent_dashboard_views."ref" = ("posthog_dashboard"."id")::varchar)))
   WHERE ("posthog_team"."project_id" = 99999
-         AND NOT ("posthog_dashboard"."deleted"))
+         AND NOT ("posthog_dashboard"."deleted")
+         AND NOT ("posthog_dashboard"."creation_mode" = 'unlisted'))
   '''
 # ---
 # name: TestDashboard.test_listing_dashboards_is_not_nplus1.34
@@ -3867,7 +3868,8 @@
                                                                                AND recent_dashboard_views."ref" = ("posthog_dashboard"."id")::varchar)))
   LEFT OUTER JOIN "posthog_user" ON ("posthog_dashboard"."created_by_id" = "posthog_user"."id")
   WHERE ("posthog_team"."project_id" = 99999
-         AND NOT ("posthog_dashboard"."deleted"))
+         AND NOT ("posthog_dashboard"."deleted")
+         AND NOT ("posthog_dashboard"."creation_mode" = 'unlisted'))
   ORDER BY "posthog_dashboard"."pinned" DESC,
            "posthog_dashboard"."name" ASC
   LIMIT 300
@@ -15705,7 +15707,8 @@
                                                                                AND recent_dashboard_views."type" = 'dashboard'
                                                                                AND recent_dashboard_views."ref" = ("posthog_dashboard"."id")::varchar)))
   WHERE ("posthog_team"."project_id" = 99999
-         AND NOT ("posthog_dashboard"."deleted"))
+         AND NOT ("posthog_dashboard"."deleted")
+         AND NOT ("posthog_dashboard"."creation_mode" = 'unlisted'))
   '''
 # ---
 # name: TestDashboard.test_retrieve_dashboard_list.47
@@ -15766,7 +15769,8 @@
                                                                                AND recent_dashboard_views."ref" = ("posthog_dashboard"."id")::varchar)))
   LEFT OUTER JOIN "posthog_user" ON ("posthog_dashboard"."created_by_id" = "posthog_user"."id")
   WHERE ("posthog_team"."project_id" = 99999
-         AND NOT ("posthog_dashboard"."deleted"))
+         AND NOT ("posthog_dashboard"."deleted")
+         AND NOT ("posthog_dashboard"."creation_mode" = 'unlisted'))
   ORDER BY "posthog_dashboard"."pinned" DESC,
            "posthog_dashboard"."name" ASC
   LIMIT 100
