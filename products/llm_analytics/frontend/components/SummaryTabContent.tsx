@@ -9,6 +9,8 @@ import { useState } from 'react'
 import { LemonButton, LemonSegmentedButton, Tooltip } from '@posthog/lemon-ui'
 
 import { Spinner } from 'lib/lemon-ui/Spinner'
+import { maxGlobalLogic } from 'scenes/max/maxGlobalLogic'
+import { AIConsentPopoverWrapper } from 'scenes/settings/organization/AIConsentPopoverWrapper'
 
 import { LLMTrace, LLMTraceEvent } from '~/queries/schema/schema-general'
 
@@ -24,6 +26,7 @@ export function SummaryTabContent({ trace, event, tree }: SummaryTabContentProps
     const logic = summaryTabLogic({ trace, event, tree })
     const { summaryData, summaryDataLoading, summaryMode } = useValues(logic)
     const { generateSummary, setSummaryMode } = useActions(logic)
+    const { dataProcessingAccepted } = useValues(maxGlobalLogic)
 
     const isSummarizable = trace || (event && (event.event === '$ai_generation' || event.event === '$ai_span'))
 
@@ -85,13 +88,32 @@ export function SummaryTabContent({ trace, event, tree }: SummaryTabContentProps
                             ]}
                             size="small"
                         />
-                        <LemonButton
-                            type="primary"
-                            onClick={() => generateSummary(summaryMode)}
-                            data-attr="llm-analytics-generate-summary"
-                        >
-                            Generate Summary
-                        </LemonButton>
+                        {!dataProcessingAccepted ? (
+                            <AIConsentPopoverWrapper
+                                showArrow
+                                onApprove={() => generateSummary(summaryMode)}
+                                hidden={summaryDataLoading}
+                            >
+                                <LemonButton
+                                    type="primary"
+                                    onClick={() => generateSummary(summaryMode)}
+                                    data-attr="llm-analytics-generate-summary"
+                                    loading={summaryDataLoading}
+                                    disabledReason={summaryDataLoading ? 'Pending approval' : undefined}
+                                >
+                                    Generate Summary
+                                </LemonButton>
+                            </AIConsentPopoverWrapper>
+                        ) : (
+                            <LemonButton
+                                type="primary"
+                                onClick={() => generateSummary(summaryMode)}
+                                data-attr="llm-analytics-generate-summary"
+                                loading={summaryDataLoading}
+                            >
+                                Generate Summary
+                            </LemonButton>
+                        )}
                     </div>
                 </div>
             )}
@@ -107,28 +129,68 @@ export function SummaryTabContent({ trace, event, tree }: SummaryTabContentProps
                 <div className="bg-danger-highlight border border-danger rounded p-4">
                     <div className="font-semibold text-danger">Failed to generate summary</div>
                     <div className="text-sm mt-2">{errorMessage}</div>
-                    <LemonButton
-                        type="secondary"
-                        size="small"
-                        onClick={() => generateSummary(summaryMode)}
-                        className="mt-4"
-                    >
-                        Try Again
-                    </LemonButton>
+                    {!dataProcessingAccepted ? (
+                        <AIConsentPopoverWrapper
+                            showArrow
+                            onApprove={() => generateSummary(summaryMode)}
+                            hidden={summaryDataLoading}
+                        >
+                            <LemonButton
+                                type="secondary"
+                                size="small"
+                                onClick={() => generateSummary(summaryMode)}
+                                className="mt-4"
+                                loading={summaryDataLoading}
+                                disabledReason={summaryDataLoading ? 'Pending approval' : undefined}
+                            >
+                                Try Again
+                            </LemonButton>
+                        </AIConsentPopoverWrapper>
+                    ) : (
+                        <LemonButton
+                            type="secondary"
+                            size="small"
+                            onClick={() => generateSummary(summaryMode)}
+                            className="mt-4"
+                            loading={summaryDataLoading}
+                        >
+                            Try Again
+                        </LemonButton>
+                    )}
                 </div>
             )}
 
             {summaryData && !summaryDataLoading && (
                 <>
                     <div className="flex items-center gap-2 flex-none">
-                        <LemonButton
-                            type="secondary"
-                            size="small"
-                            onClick={() => generateSummary(summaryMode)}
-                            data-attr="llm-analytics-regenerate-summary"
-                        >
-                            Regenerate
-                        </LemonButton>
+                        {!dataProcessingAccepted ? (
+                            <AIConsentPopoverWrapper
+                                showArrow
+                                onApprove={() => generateSummary(summaryMode)}
+                                hidden={summaryDataLoading}
+                            >
+                                <LemonButton
+                                    type="secondary"
+                                    size="small"
+                                    onClick={() => generateSummary(summaryMode)}
+                                    data-attr="llm-analytics-regenerate-summary"
+                                    loading={summaryDataLoading}
+                                    disabledReason={summaryDataLoading ? 'Pending approval' : undefined}
+                                >
+                                    Regenerate
+                                </LemonButton>
+                            </AIConsentPopoverWrapper>
+                        ) : (
+                            <LemonButton
+                                type="secondary"
+                                size="small"
+                                onClick={() => generateSummary(summaryMode)}
+                                data-attr="llm-analytics-regenerate-summary"
+                                loading={summaryDataLoading}
+                            >
+                                Regenerate
+                            </LemonButton>
+                        )}
                         <LemonSegmentedButton
                             value={summaryMode}
                             onChange={setSummaryMode}
