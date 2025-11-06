@@ -826,7 +826,14 @@ const EventContent = React.memo(
                                     ? [
                                           {
                                               key: TraceViewMode.Summary,
-                                              label: 'Summary',
+                                              label: (
+                                                  <>
+                                                      Summary{' '}
+                                                      <LemonTag className="ml-1" type="completion">
+                                                          Alpha
+                                                      </LemonTag>
+                                                  </>
+                                              ),
                                               'data-attr': 'trace-summary-tab',
                                               content: (
                                                   <SummaryTabContent
