@@ -356,6 +356,9 @@ function SummaryRenderer({ summary }: { summary: StructuredSummary }): JSX.Eleme
 
     return (
         <div className="space-y-4">
+            {/* Title */}
+            <h3 className="text-lg font-semibold">{summary.title}</h3>
+
             {/* Flow Diagram - Collapsible ASCII */}
             <div className="border border-border rounded">
                 <Tooltip title="ASCII diagram showing the main steps and flow of execution">

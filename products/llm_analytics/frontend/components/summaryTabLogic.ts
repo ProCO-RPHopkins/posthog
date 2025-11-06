@@ -20,6 +20,7 @@ export interface InterestingNote {
 }
 
 export interface StructuredSummary {
+    title: string
     flow_diagram: string
     summary_bullets: SummaryBullet[]
     interesting_notes: InterestingNote[] // Empty array if none
