@@ -545,6 +545,7 @@ function NestedContentRenderer({
                                         onClick={() => toggleNestedSegment(nestedIdx)}
                                         className="text-link hover:underline cursor-pointer"
                                         title={isNestedExpanded ? 'Collapse' : 'Expand'}
+                                        data-attr="text-view-expand-tools"
                                     >
                                         {isNestedExpanded ? '[−]' : '[+]'} {hiddenTools.length} more tool
                                         {hiddenTools.length > 1 ? 's' : ''}
@@ -574,6 +575,7 @@ function NestedContentRenderer({
                                 <button
                                     onClick={() => toggleNestedSegment(nestedIdx)}
                                     className="text-link hover:underline cursor-pointer ml-1"
+                                    data-attr="text-view-collapse-content"
                                 >
                                     [collapse]
                                 </button>
@@ -583,6 +585,7 @@ function NestedContentRenderer({
                                 <button
                                     onClick={() => toggleNestedSegment(nestedIdx)}
                                     className="text-link hover:underline cursor-pointer"
+                                    data-attr="text-view-expand-content"
                                 >
                                     {nestedSeg.content}
                                 </button>

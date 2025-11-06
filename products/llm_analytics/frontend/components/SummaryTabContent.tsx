@@ -87,6 +87,7 @@ export function SummaryTabContent({ trace, event, tree }: SummaryTabContentProps
                                 },
                             ]}
                             size="small"
+                            data-attr="summary-mode-selector"
                         />
                         {!dataProcessingAccepted ? (
                             <AIConsentPopoverWrapper
@@ -207,6 +208,7 @@ export function SummaryTabContent({ trace, event, tree }: SummaryTabContentProps
                                 },
                             ]}
                             size="xsmall"
+                            data-attr="summary-mode-selector"
                         />
                     </div>
 
@@ -291,6 +293,7 @@ function SummaryRenderer({ summary }: { summary: StructuredSummary }): JSX.Eleme
                     key={match.index}
                     type="button"
                     className="text-link hover:underline font-semibold cursor-pointer"
+                    data-attr="summary-line-reference-link"
                     onClick={(e) => {
                         e.preventDefault()
 
@@ -360,6 +363,7 @@ function SummaryRenderer({ summary }: { summary: StructuredSummary }): JSX.Eleme
                         type="button"
                         className="w-full text-left px-3 py-2 font-medium flex items-center gap-2 hover:bg-accent text-sm"
                         onClick={() => setIsFlowExpanded(!isFlowExpanded)}
+                        data-attr="summary-toggle-flow-diagram"
                     >
                         <span className="text-xs">{isFlowExpanded ? '▼' : '▶'}</span>
                         Flow Diagram
@@ -381,6 +385,7 @@ function SummaryRenderer({ summary }: { summary: StructuredSummary }): JSX.Eleme
                         type="button"
                         className="w-full text-left px-3 py-2 font-medium flex items-center gap-2 hover:bg-accent text-sm"
                         onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
+                        data-attr="summary-toggle-points"
                     >
                         <span className="text-xs">{isSummaryExpanded ? '▼' : '▶'}</span>
                         Summary Points
@@ -408,6 +413,7 @@ function SummaryRenderer({ summary }: { summary: StructuredSummary }): JSX.Eleme
                             type="button"
                             className="w-full text-left px-3 py-2 font-medium flex items-center gap-2 hover:bg-accent text-sm"
                             onClick={() => setIsNotesExpanded(!isNotesExpanded)}
+                            data-attr="summary-toggle-notes"
                         >
                             <span className="text-xs">{isNotesExpanded ? '▼' : '▶'}</span>
                             Interesting Notes

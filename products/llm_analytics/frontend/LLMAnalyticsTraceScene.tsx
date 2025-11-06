@@ -741,6 +741,7 @@ const EventContent = React.memo(
                                 {
                                     key: TraceViewMode.Conversation,
                                     label: 'Conversation',
+                                    'data-attr': 'trace-conversation-tab',
                                     content: (
                                         <>
                                             {displayOption === DisplayOption.TextView &&
@@ -814,6 +815,7 @@ const EventContent = React.memo(
                                 {
                                     key: TraceViewMode.Raw,
                                     label: 'Raw',
+                                    'data-attr': 'trace-raw-tab',
                                     content: (
                                         <div className="p-2">
                                             <JSONViewer src={event} collapsed={2} />
@@ -825,6 +827,7 @@ const EventContent = React.memo(
                                           {
                                               key: TraceViewMode.Summary,
                                               label: 'Summary',
+                                              'data-attr': 'trace-summary-tab',
                                               content: (
                                                   <SummaryTabContent
                                                       trace={!isLLMEvent(event) ? event : undefined}
@@ -840,6 +843,7 @@ const EventContent = React.memo(
                                           {
                                               key: TraceViewMode.Evals,
                                               label: 'Evaluations',
+                                              'data-attr': 'trace-evaluations-tab',
                                               content: (
                                                   <EvalsTabContent
                                                       generationEventId={event.id}
@@ -941,11 +945,13 @@ function DisplayOptionsSelect(): JSX.Element {
             value: DisplayOption.ExpandAll,
             label: 'Expand all',
             tooltip: 'Show all messages and full conversation history',
+            'data-attr': 'display-option-expand-all',
         },
         {
             value: DisplayOption.CollapseExceptOutputAndLastInput,
             label: 'Collapse except output and last input',
             tooltip: 'Focus on the most recent input and final output',
+            'data-attr': 'display-option-collapse',
         },
         ...(featureFlags[FEATURE_FLAGS.LLM_ANALYTICS_TEXT_VIEW]
             ? [
@@ -953,6 +959,7 @@ function DisplayOptionsSelect(): JSX.Element {
                       value: DisplayOption.TextView,
                       label: 'Text view',
                       tooltip: 'Simple human readable text view, for humans',
+                      'data-attr': 'display-option-text-view',
                   },
               ]
             : []),
@@ -965,6 +972,7 @@ function DisplayOptionsSelect(): JSX.Element {
             onChange={setDisplayOption}
             options={displayOptions}
             tooltip="Configure how generation conversation messages are displayed"
+            data-attr="trace-display-option-selector"
         />
     )
 }
