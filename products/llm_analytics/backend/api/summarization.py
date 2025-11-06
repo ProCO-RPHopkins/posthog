@@ -241,11 +241,15 @@ The response includes the summary text and optional metadata.
                     raise exceptions.ValidationError("Trace summarization requires 'trace' and 'hierarchy' fields")
                 trace = data["trace"]
                 trace_id = trace.get("properties", {}).get("$ai_trace_id") or trace.get("id")
+                if not trace_id:
+                    raise exceptions.ValidationError("Trace must have either '$ai_trace_id' or 'id'")
             elif summarize_type == "event":
                 if not data.get("event"):
                     raise exceptions.ValidationError("Event summarization requires 'event' field")
                 event = data["event"]
                 trace_id = event.get("properties", {}).get("$ai_trace_id") or event.get("id")
+                if not trace_id:
+                    raise exceptions.ValidationError("Event must have either '$ai_trace_id' or 'id'")
             else:
                 raise exceptions.ValidationError(f"Invalid summarize_type: {summarize_type}")
 
