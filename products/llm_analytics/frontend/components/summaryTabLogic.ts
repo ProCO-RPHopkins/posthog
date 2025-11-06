@@ -86,7 +86,7 @@ export const summaryTabLogic = kea<summaryTabLogicType>([
                     throw new Error('Team ID not available')
                 }
 
-                const url = `/api/projects/${teamId}/llm_analytics/summarize/`
+                const url = `/api/environments/${teamId}/llm_analytics/summarization/`
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
