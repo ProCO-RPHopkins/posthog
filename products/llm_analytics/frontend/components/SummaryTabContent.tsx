@@ -218,7 +218,7 @@ export function SummaryTabContent({ trace, event, tree }: SummaryTabContentProps
                         </div>
                     </div>
 
-                    <div className="flex-1 flex flex-col min-h-0">
+                    <div className="flex flex-col min-h-0 max-h-[800px]">
                         <h4 className="font-semibold mb-2">Text Representation</h4>
                         <div className="border rounded flex-1 overflow-hidden">
                             <TextReprDisplay textRepr={summaryData.text_repr} />
