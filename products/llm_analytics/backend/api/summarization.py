@@ -231,7 +231,7 @@ The response includes the summary text and optional metadata.
 
         try:
             summarize_type = serializer.validated_data["summarize_type"]
-            mode = serializer.validated_data.get("mode", "detailed")
+            mode = serializer.validated_data.get("mode", "minimal")
             data = serializer.validated_data["data"]
             force_refresh = serializer.validated_data.get("force_refresh", False)
 
